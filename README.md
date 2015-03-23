@@ -73,14 +73,19 @@ iex(1)>
 
 ## Terms
 
+### General
+
 *  "project": Mix project, may be an umbrella project containing multiple applications
 *  "application": OTP Application
 
+### OTP
 
 *  Agent: simple wrappers around state
-*  GenServer: "generic servers" aka processes that encapsulate state, provide sync/async calls, code reload, etc
+*  GenServer: "generic servers" aka processes that encapsulate state, provide sync/async calls,
+   code reload, etc
 *  GenEvent: "generic event" managers that allow publishing events to multiple handlers/listeners
-*  Task: Asynchronous units of computation that allow spawning a process and easily retrieving its result at a later time
+*  Task: Asynchronous units of computation that allow spawning a process and easily retrieving its
+   result at a later time
 
 =======
 
