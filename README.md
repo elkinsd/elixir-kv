@@ -279,6 +279,23 @@ iex(3)> KV.Registry.lookup(KV.Registry, "shopping")
 
 ## Application
 
+## Using an application to start supervisor
+```
+$ iex -S mix
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Compiled lib/kv.ex
+Compiled lib/kv/supervisor.ex
+Compiled lib/kv/bucket.ex
+Compiled lib/kv/registry.ex
+Generated kv.app
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> KV.Registry.create(KV.Registry, "shopping")
+:ok
+iex(2)> KV.Registry.lookup(KV.Registry, "shopping")
+{:ok, #PID<0.116.0>}
+```
+
 ## OTP Behaviour
 
 *  `start/2`
@@ -312,23 +329,6 @@ iex(4)> Application.stop(:kv)
 :ok
 iex(5)> 
 13:38:29.059 [info]  Application kv exited: :stopped
-```
-
-## Using an application to start supervisor
-```
-$ iex -S mix
-Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
-
-Compiled lib/kv.ex
-Compiled lib/kv/supervisor.ex
-Compiled lib/kv/bucket.ex
-Compiled lib/kv/registry.ex
-Generated kv.app
-Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> KV.Registry.create(KV.Registry, "shopping")
-:ok
-iex(2)> KV.Registry.lookup(KV.Registry, "shopping")
-{:ok, #PID<0.116.0>}
 ```
 
 ## An example generated kv_app in _build/dev/lib/kv/ebin/kv_app
