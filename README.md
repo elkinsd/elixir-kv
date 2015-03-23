@@ -402,6 +402,8 @@ See: `mix help compile.app` for more info
 
 ## ETS
 
+ETS default table attributes are `:set` (unique keys) and `:protected` (only process spawning table process can read/write)
+
 ### ETS exmaple for buckets registry
 ```
 $ iex -S mix
