@@ -129,6 +129,13 @@ iex(4)> flush()
 :ok
 ```
 
+### Notes about monitors
+
+*  "monitors" are references, uni-directional, only monitoring processes receive notifications
+*  "links" are pids, bi-directional, crashes unless trapping exits
+
+Use links when you want linked crashes, use monitors when you just want to be informed of crashes, exits, etc.
+
 =======
 
 ## Event Managers
@@ -215,13 +222,6 @@ def delete(bucket, key) do
   end)
 end
 ```
-
-### Notes
-
-*  "monitors" are references, uni-directional, only monitoring processes receive notifications
-*  "links" are pids, bi-directional, crashes unless trapping exits
-
-Use links when you want linked crashes, use monitors when you just want to be informed of crashes, exits, etc.
 
 =======
 
