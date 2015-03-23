@@ -281,6 +281,12 @@ iex(3)> KV.Registry.lookup(KV.Registry, "shopping")
 {:ok, #PID<0.103.0>}
 ```
 
+### OTP Behaviour
+
+*  `worker/2`
+*  `supervisor/2`
+*  `supervise/2`
+
 ### Notes on Bucket Supervisor
 
 *  call `KV.Bucket.Supervisor.start_bucket/1` instead of `KV.Bucket.start_link` in `KV.Registry`
@@ -303,6 +309,22 @@ iex(3)> KV.Bucket.put(bucket, "eggs", 3)
 iex(4)> KV.Bucket.get(bucket, "eggs")
 3
 ```
+
+### Supervision trees
+
+*  root sup [:one_for_one]
+** event manager
+** supervisor [:one_for_one]
+*** buckets supervisor [:simple_one_for_one]
+**** buckets
+*** registry
+
+### Supervision strategies
+
+*  :one_for_one
+*  :one_for_all
+*  :simple_one_for_one
+
 
 =======
 
@@ -372,4 +394,6 @@ iex(5)>
 ```
 
 See: `mix help compile.app` for more info
+
+=======
 
