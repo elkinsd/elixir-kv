@@ -432,3 +432,9 @@ true
 iex(3)> :ets.lookup(:buckets_registry, "foo")
 [{"foo", #PID<0.88.0>}]
 ```
+
+=======
+
+At this point `kv` application considered "complete", and will be brought into an umbrella project to be used
+by a companion TCP server to handle user requests.
+
