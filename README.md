@@ -315,18 +315,18 @@ iex(4)> KV.Bucket.get(bucket, "eggs")
 
 ### Supervision trees
 
-   * root sup [:one_for_one]
-   ** event manager
-   ** supervisor [:one_for_one]
-   *** buckets supervisor [:simple_one_for_one]
-   **** buckets
-   *** registry
+*  root sup [:one_for_one]
+   *  event manager
+   *  supervisor [:one_for_one]
+      *  buckets supervisor [:simple_one_for_one]
+         *  buckets
+   *  registry
 
 ### Supervision strategies
 
-   * :one_for_one
-   * :one_for_all
-   * :simple_one_for_one
+*  :one_for_one
+*  :one_for_all
+*  :simple_one_for_one
 
 
 =======
