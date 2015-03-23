@@ -10,12 +10,18 @@ defmodule KV.RegistryTest do
   end
 
   setup do
+    ets = :ets.new(:registry_table, [:set, :public])
+    registry = start_registry(ets)
+    {:ok, registry: registry, ets: ets}
+  end
+
+  defp start_registry(ets) do
     {:ok, sup} = KV.Bucket.Supervisor.start_link
     {:ok, manager} = GenEvent.start_link
-    {:ok, registry} = KV.Registry.start_link(:registry_table, manager, sup)
+    {:ok, registry} = KV.Registry.start_link(ets, manager, sup)
 
     GenEvent.add_mon_handler(manager, Forwarder, self())
-    {:ok, registry: registry, ets: :registry_table}
+    registry
   end
 
   test "spawns buckets", %{registry: registry, ets: ets} do
@@ -51,6 +57,20 @@ defmodule KV.RegistryTest do
 
     ## Kill the bucket and wait for the notification
     Process.exit(bucket, :shutdown)
+    assert_receive {:exit, "shopping", ^bucket}
+    assert KV.Registry.lookup(ets, "shopping") == :error
+  end
+
+  test "monitors existing entries", %{registry: registry, ets: ets} do
+    bucket = KV.Registry.create(registry, "shopping")
+
+    Process.unlink(registry)  ## Kill the registry, unlink first otherwise will kill test
+    Process.exit(registry, :shutdown)
+
+    start_registry(ets)  ## Start new registry with existing table and access the bucket
+    assert KV.Registry.lookup(ets, "shopping") == {:ok, bucket}
+
+    Process.exit(bucket, :shutdown)  ## Once the bucket dies, we should receive notification
     assert_receive {:exit, "shopping", ^bucket}
     assert KV.Registry.lookup(ets, "shopping") == :error
   end
