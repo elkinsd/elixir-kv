@@ -169,6 +169,12 @@ iex(7)> flush()
 :ok
 ```
 
+### OTP Behaviour
+
+*  `handle_event/2`: handle event
+*  `add_handler/3`: add event handler
+*  `add_mon_handler/3`: add event handler and monitor process, if process dies removes event handler
+
 ### Notes about events
 
 *  Event handlers run in the same process as the event manager
