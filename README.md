@@ -77,6 +77,7 @@ iex(1)>
 
 *  "project": Mix project, may be an umbrella project containing multiple applications
 *  "application": OTP Application
+*  ETS: Erlang Term Storage, data persistence and caching mechanism
 
 ### OTP
 
@@ -93,6 +94,8 @@ iex(1)>
 
 *  Never convert user input to atoms (fills name registry facility aka memory)
 *  Avoid creating new processes directory, instead delegate to supervisor
+*  Don't resort to ETS prematurely, but only after identifying/logging to
+   discover bottlenecks
 
 =======
 
@@ -397,3 +400,33 @@ See: `mix help compile.app` for more info
 
 =======
 
+## ETS
+
+### ETS exmaple for buckets registry
+```
+$ iex -S mix
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> table = :ets.new(:buckets_registry, [:set, :protected])
+188435
+iex(2)> :ets.insert(table, {"foo", self})
+true
+iex(3)> :ets.lookup(table, "foo")
+[{"foo", #PID<0.109.0>}]
+```
+
+### ETS example with named table
+
+```
+$ iex -S mix
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> :ets.new(:buckets_registry, [:named_table])
+:buckets_registry
+iex(2)> :ets.insert(:buckets_registry, {"foo", self})
+true
+iex(3)> :ets.lookup(:buckets_registry, "foo")
+[{"foo", #PID<0.88.0>}]
+```
