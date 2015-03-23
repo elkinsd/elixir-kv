@@ -78,6 +78,9 @@ iex(1)>
 *  GenEvent: "generic event" managers that allow publishing events to multiple handlers/listeners
 *  Task: Asynchronous units of computation that allow spawning a process and easily retrieving its result at a later time
 
+*  "project": Mix project, may be an umbrella project containing multiple applications
+*  "application": OTP Application
+
 =======
 
 ## General Rules
@@ -271,4 +274,73 @@ iex(2)> KV.Registry.create(KV.Registry, "shopping")
 iex(3)> KV.Registry.lookup(KV.Registry, "shopping")
 {:ok, #PID<0.103.0>}
 ```
+
+=======
+
+## Application
+
+## OTP Behaviour
+
+*  `start/2`
+*  `stop/1`
+
+## Examples of starting an application
+```
+$ iex -S mix
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> Application.start(:kv)
+{:error, {:already_started, :kv}}
+
+$ iex -S mix run --no-start
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> Application.stop(:logger)
+
+=INFO REPORT==== 23-Mar-2015::13:41:23 ===
+    application: logger
+    exited: stopped
+    type: temporary
+:ok
+iex(2)> Application.start(:kv)
+{:error, {:not_started, :logger}}
+iex(3)> Application.ensure_all_started(:kv)
+{:ok, [:logger, :kv]}
+iex(4)> Application.stop(:kv)
+:ok
+iex(5)> 
+13:38:29.059 [info]  Application kv exited: :stopped
+```
+
+## Using an application to start supervisor
+```
+$ iex -S mix
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Compiled lib/kv.ex
+Compiled lib/kv/supervisor.ex
+Compiled lib/kv/bucket.ex
+Compiled lib/kv/registry.ex
+Generated kv.app
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> KV.Registry.create(KV.Registry, "shopping")
+:ok
+iex(2)> KV.Registry.lookup(KV.Registry, "shopping")
+{:ok, #PID<0.116.0>}
+```
+
+## An example generated kv_app in _build/dev/lib/kv/ebin/kv_app
+```
+{application, kv,
+              [{registered, []},
+              {description, "kv"},
+              {applications, [kernel, stdlib, elixir, logger]},
+              {vsn, "0.0.1"},
+              {modules, ['Elixir.KV','Elixir.KV.Bucket',
+                         'Elixir.KV.Registry','Elixir.KV.Supervisor']}]}
+```
+
+See: `mix help compile.app` for more info
 
