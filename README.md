@@ -275,6 +275,29 @@ iex(3)> KV.Registry.lookup(KV.Registry, "shopping")
 {:ok, #PID<0.103.0>}
 ```
 
+### Notes on Bucket Supervisor
+
+*  call `KV.Bucket.Supervisor.start_bucket/1` instead of `KV.Bucket.start_link` in `KV.Registry`
+*  mark worker as `:temporary`, ie if bucket dies it won't be restarted
+*  use supervisor only to group buckets, the registry is always used to create buckets
+
+```
+$ iex -S mix
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Compiled lib/kv/bucket/supervisor.ex
+Generated kv.app
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> {:ok, sup} = KV.Bucket.Supervisor.start_link
+{:ok, #PID<0.98.0>}
+iex(2)> {:ok, bucket} = KV.Bucket.Supervisor.start_bucket(sup)
+{:ok, #PID<0.100.0>}
+iex(3)> KV.Bucket.put(bucket, "eggs", 3)
+:ok
+iex(4)> KV.Bucket.get(bucket, "eggs")
+3
+```
+
 =======
 
 ## Application
