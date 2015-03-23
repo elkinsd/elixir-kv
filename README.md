@@ -230,4 +230,27 @@ Use links when you want linked crashes, use monitors when you just want to be in
 *  `handle_cast/2`: async, use sparingly
 *  `handle_info/2`: all other messages from send/2, etc
 
+=======
 
+## Event streams
+
+## Spawn a process to handle blocking on an event stream
+```
+$iex
+Erlang/OTP 17 [erts-6.3] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Interactive Elixir (1.1.0-dev) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> {:ok, manager} = GenEvent.start_link
+{:ok, #PID<0.60.0>}
+iex(2)> spawn_link fn ->
+...(2)>   for x <- GenEvent.stream(manager), do: IO.inspect(x)
+...(2)> end
+#PID<0.64.0>
+iex(3)> GenEvent.notify(manager, {:hello, :world})
+{:hello, :world}
+:ok
+```
+
+=======
+
+## Supervisor
